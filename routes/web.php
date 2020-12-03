@@ -26,3 +26,11 @@ Route::get('/students', 'AdminController@students')->name('students');
 Route::get('/classes', 'AdminController@classes')->name('classes');
 
 Route::get('/my_classes', 'AdminController@my_classes')->name('my_classes');
+
+Route::get('/students/{id}', 'AdminController@show')->name('singlestudent');
+
+Route::get('/deletestudent/student/{stid}/class/{clid}', 'AdminController@destroy')->name('deletefromclass');
+
+Route::post('/addtoclass', 'AdminController@store')->name('addtoclass');
+
+Route::get('/class/{id}', 'AdminController@single_class')->name('singleclass');

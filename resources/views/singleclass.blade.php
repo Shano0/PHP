@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Classes</title>
+    <title>{{ $classname }}</title>
 </head>
 <body>
     <div style="text-align: center">
-        <h1>Classes</h1>
+        <h1>{{ $classname }}</h1>
         <br>
-        @foreach ($classes as $class)
-        <p>{{ $class->classname }} <a href="{{ route('singleclass',[$class->id]) }}">See The Class Members</a> </p>
+        @foreach ($students as $student)
+        <p>{{ $student }}</p>
         @endforeach
     </div>
 </body>

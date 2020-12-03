@@ -7,6 +7,11 @@
     <title>My Classes</title>
 </head>
 <body>
-    <h1>My Classes</h1>
+    <div style="text-align: center">
+        <h1>My Classes</h1>
+        @foreach ($classes as $class)
+        <p>{{ $class }}</p>
+        @endforeach
+    </div>
 </body>
 </html>

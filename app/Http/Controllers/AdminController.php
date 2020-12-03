@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\studentclasses;
+use App\Classes;
+use User;
+use Auth;
 
 class AdminController extends Controller
 {
@@ -23,17 +27,25 @@ class AdminController extends Controller
 
     public function students()
     {
-        return view('students');
+        $users = \App\User::all()->where('isAdmin', 0);
+
+        return view('students', ['users'=>$users]);
     }
 
     public function classes()
     {
-        return view('classes');
+        $classes = \App\Classes::get();
+
+        return view('classes', ['classes'=>$classes]);
     }
     
     public function my_classes()
     {
-        return view('myclasses');
+        $classnames = array();
+        foreach(studentclasses::where('student_id', Auth::user()->id)->get() as $class){
+            array_push($classnames, \App\Classes::where('id', $class->class_id)->firstOrFail()->classname);
+        }
+        return view('myclasses', ['classes'=>$classnames]);
     }
 
     /**
@@ -46,6 +58,24 @@ class AdminController extends Controller
         //
     }
 
+    public function single_class($id)
+    {
+        $students_id = array();
+        foreach (studentclasses::where('class_id', $id)->get() as $student){
+            array_push($students_id, $student->student_id);
+        }
+
+        $students_name = array();
+        foreach ($students_id as $student_id){
+            array_push($students_name, \App\User::findOrFail($student_id)->name);
+        }
+
+        $class = \App\Classes::where('id', $id)->firstOrFail()->classname;
+
+        return view('singleclass', ['classname'=>$class, 'students'=>$students_name]);
+    }
+
+
     /**
      * Store a newly created resource in storage.
      *
@@ -54,7 +84,12 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        studentclasses::create([
+            'class_id'=>$request->input('classid'),
+            'student_id'=>$request->input('studentid')
+        ]);
+
+        return redirect()->back();
     }
 
     /**
@@ -65,7 +100,17 @@ class AdminController extends Controller
      */
     public function show($id)
     {
-        //
+        $student = \App\User::where('id', $id)->firstOrFail();
+
+        $studentsclasses = \App\studentclasses::where('student_id', $id)->get();
+        $classes = array();
+        foreach($studentsclasses as $class){
+            array_push($classes, \App\Classes::where('id', $class->class_id)->firstOrFail());
+        }
+
+        $allClasses = Classes::get();
+
+        return view('singlestudent', ['classes'=>$classes, 'student'=>$student, 'allclasses'=>$allClasses]);
     }
 
     /**
@@ -97,8 +142,13 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($StudentId, $classId)
     {
-        //
+        studentclasses::where([
+            ['student_id', $StudentId],
+            ['class_id', $classId]
+        ])->delete();
+
+        return redirect()->back();
     }
 }

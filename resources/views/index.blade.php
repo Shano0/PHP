@@ -7,13 +7,15 @@
     <title>Classes</title>
 </head>
 <body>
-    <h1>klasebi</h1>
-    @if (Auth::user()->isAdmin == 1)
-        <a href="{{ route('students') }}">Students</a>
-        <a href="{{ route('classes') }}">Classes</a>
-    @endif
-    @if (!Auth::user()->isAdmin == 1)
-        <a href="{{ route('my_classes') }}">My Classes</a>
-    @endif
+    <div style="text-align: center">
+        <h1>klasebi</h1>
+        @if (Auth::user()->isAdmin == 1)
+            <a href="{{ route('students') }}">Students</a>
+            <a href="{{ route('classes') }}">Classes</a>
+        @endif
+        @if (!Auth::user()->isAdmin == 1)
+            <a href="{{ route('my_classes') }}">My Classes</a>
+        @endif
+    </div>
 </body>
 </html>
